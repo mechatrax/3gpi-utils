@@ -1,4 +1,2 @@
 ./3gpictl /usr/sbin/
-./3gpiinit.sh /usr/sbin/
-./3gpikeep.sh /usr/sbin/
 ./70-3gpi-usbserial.rules /lib/udev/rules.d/

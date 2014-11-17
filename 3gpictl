@@ -4,7 +4,7 @@
 # control 3gpi module script
 # 
 
-VERSION="3gpictl version 0.1"
+VERSION="3gpictl version 0.2"
 
 USAGE="Usage: 3gpictl [OPTION]
 
@@ -19,24 +19,26 @@ Options:
   --help, -h       display help and exit
 "
 
-POWER_PORT="/sys/class/gpio/gpio17/value"
-RESET_PORT="/sys/class/gpio/gpio27/value"
-STATUS_PORT="/sys/class/gpio/gpio22/value"
+POWER_PIN="17"
+RESET_PIN="27"
+STATUS_PIN="22"
 
 CONSOLE="/dev/tty3GPI"
 
 #
-# Usage: stat_gpio [GPIO_PORT]
+# Usage: stat_gpio [GPIO_PIN]
 #
 stat_gpio ()
 {
-    if [ ! -r $1 ]
+    PORT="/sys/class/gpio/gpio${1}/value"
+
+    if [ ! -r $PORT ]
     then
-        echo "cannot access ${1}"
+        echo "cannot access ${PORT}"
         return 1
     fi
 
-    case "$(cat $1)" in
+    case "$(cat $PORT)" in
     0)
         echo "off"
         ;;
@@ -51,11 +53,12 @@ stat_gpio ()
 }
 
 #
-# Usage: ctl_gpio [CONDITION] [GPIO_PORT] [TOGGLE_INTERVAL]
+# Usage: ctl_gpio [CONDITION] [GPIO_PIN] [TOGGLE_INTERVAL]
 #
 ctl_gpio ()
 {
-    STATUS=$(stat_gpio $STATUS_PORT)
+    STATUS=$(stat_gpio $STATUS_PIN)
+    PORT="/sys/class/gpio/gpio${2}/value"
  
     if [ $? -ne 0 ]
     then
@@ -69,15 +72,15 @@ ctl_gpio ()
         return 1
     fi
 
-    if [ ! -w $2 ]
+    if [ ! -w $PORT ]
     then
-        echo "cannot access ${2}"
+        echo "cannot access ${PORT}"
         return 1
     fi
 
-    echo 1 > $2
+    echo 1 > $PORT
     sleep $3
-    echo 0 > $2
+    echo 0 > $PORT
 }
 
 #
@@ -99,16 +102,16 @@ ctl_gps ()
 #
 case $1 in
 --poweron)
-    ctl_gpio "on" $POWER_PORT 3
+    ctl_gpio "on" $POWER_PIN 3
     ;;
 --poweroff)
-    ctl_gpio "off" $POWER_PORT 3
+    ctl_gpio "off" $POWER_PIN 3
     ;;
 --reset)
-    ctl_gpio "off" $RESET_PORT 1
+    ctl_gpio "off" $RESET_PIN 1
     ;;
 --status)
-    stat_gpio $STATUS_PORT
+    stat_gpio $STATUS_PIN
     ;;
 --gpson)
     ctl_gps "1,1"

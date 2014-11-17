@@ -13,7 +13,7 @@ KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="00"
 KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="gps"
 
 # AT command port
-KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI"
+KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI", RUN+="/bin/sh -c '. /etc/default/3gpi-utils; [ $AUTO_ON -eq 0 ] || [ $AUTO_GPS -eq 0 ] || (/bin/sleep 5; /usr/sbin/3gpictl --gpson)'"
 
 # MODEM port
 KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="modem"
