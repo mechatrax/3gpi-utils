@@ -7,8 +7,8 @@
 以下のファイルがパッケージに含まれています。
 
 * /etc/cron.d/3gpi-utils  
-  3GPIの電源監視を行うための設定ファイルです。  
-  5分おきに /usr/sbin/3gpikeep.sh を実行します。
+  3GPIの電源監視を行うためのファイルです。  
+  5分おきに実行するように設定されています。
 
 * /etc/default/3gpi-utils  
   3GPIの動作設定を行うためのファイルです。  
@@ -40,11 +40,6 @@
 * /usr/share/doc/3gpi-utils/changelog.Debian.gz  
   パッケージの変更履歴が記録されているファイルです。  
 
-* /usr/sbin/3gpikeep.sh  
-  3GPIの電源監視を行うための実行ファイルです。  
-  /etc/default/3gpi-utilsi の KEEP_ON の設定にしたがって動作します。
-  通常はユーザーが実行する必要はありません。
-
 * /usr/sbin/3gpictl  
   3GPIの操作を行うための実行ファイルです。  
   使用可能なオプションを以下に示します。  
@@ -58,16 +53,9 @@
   –version, -v : バージョンを表示します。  
   –help, -h : ヘルプを表示します。  
 
-* /usr/sbin/3gpiinit.sh
-  Raspberry Pi のGPIOの初期化と3GPIの初期化を行います。
-  /lib/systemd/system/3gpi.service から実行されます。
-  通常はユーザーが実行する必要はありません。
-
 * /lib/udev/rules.d/70-3gpi-usbserial.rules  
-  3GPIのデバイス設定を行うためのファイルです。  
-  通常はユーザーが編集する必要はありません。  
+  3GPIのデバイスを定義した設定ファイルです。  
 
-* /lib/systemd/system/3gpi.service  
-  3GPIのサービス設定を行うためのファイルです。  
-  通常はユーザーが編集する必要はありません。  
+* /lib/systemd/system/3gpi-utils.service  
+  3GPIのサービスを稼働させるための設定ファイルです。  
 
