@@ -1,0 +1,29 @@
+#
+# 3GPI Settings
+#
+
+#
+# Power on 3GPI on boot 
+#
+# AUTO_ON=0: disable auto power on
+# AUTO_ON=1: enable auto power on
+#
+AUTO_ON=1
+
+#
+# Keep power on
+# (run cron job every 5min)
+#
+# KEEP_ON=0: disable 
+# KEEP_ON=1: enable (AUTO_ON=1 is required)
+#
+KEEP_ON=0
+
+#
+# Start GPS on boot
+#
+# AUTO_GPS=0: disable auto gps start
+# AUTO_GPS=1: enable auto gps start (AUTO_ON=1 is required)
+#
+AUTO_GPS=0
+

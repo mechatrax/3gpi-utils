@@ -1,0 +1,136 @@
+#!/bin/sh
+
+#
+# control 3gpi module script
+# 
+
+VERSION="3gpictl version 0.1"
+
+USAGE="Usage: 3gpictl [OPTION]
+
+Options:
+  --poweron        turn on 3g module
+  --poweroff       turn off 3g module
+  --reset          reset 3g module
+  --status         show power status
+  --gpson          turn on gps module
+  --gpsoff         turn off gps module
+  --version, -v    display version and exit
+  --help, -h       display help and exit
+"
+
+POWER_PORT="/sys/class/gpio/gpio17/value"
+RESET_PORT="/sys/class/gpio/gpio27/value"
+STATUS_PORT="/sys/class/gpio/gpio22/value"
+
+CONSOLE="/dev/tty3GPI"
+
+#
+# Usage: stat_gpio [GPIO_PORT]
+#
+stat_gpio ()
+{
+    if [ ! -r $1 ]
+    then
+        echo "cannot access ${1}"
+        return 1
+    fi
+
+    case "$(cat $1)" in
+    0)
+        echo "off"
+        ;;
+    1)
+        echo "on"
+        ;;
+    *)
+        echo "unknown"
+        return 1
+        ;;
+    esac
+}
+
+#
+# Usage: ctl_gpio [CONDITION] [GPIO_PORT] [TOGGLE_INTERVAL]
+#
+ctl_gpio ()
+{
+    STATUS=$(stat_gpio $STATUS_PORT)
+ 
+    if [ $? -ne 0 ]
+    then
+        echo $STATUS
+        return 1
+    fi
+
+    if [ $STATUS = $1 ]
+    then
+        echo "already power ${1}"
+        return 1
+    fi
+
+    if [ ! -w $2 ]
+    then
+        echo "cannot access ${2}"
+        return 1
+    fi
+
+    echo 1 > $2
+    sleep $3
+    echo 0 > $2
+}
+
+#
+# Usage: ctl_gps [+CGPS_PARAM]
+#
+ctl_gps ()
+{
+    if [ ! -w $CONSOLE ]
+    then
+        echo "cannot access ${CONSOLE}"
+        return 1
+    fi
+
+    echo -e "AT+CGPS=${1}\r" > $CONSOLE
+}
+
+#
+# execute command
+#
+case $1 in
+--poweron)
+    ctl_gpio "on" $POWER_PORT 3
+    ;;
+--poweroff)
+    ctl_gpio "off" $POWER_PORT 3
+    ;;
+--reset)
+    ctl_gpio "off" $RESET_PORT 1
+    ;;
+--status)
+    stat_gpio $STATUS_PORT
+    ;;
+--gpson)
+    ctl_gps "1,1"
+    ;;
+--gpsoff)
+    ctl_gps "0"
+    ;;
+-v|--version)
+    echo "$VERSION"
+    ;;
+-h|--help)
+    echo "$USAGE"
+    ;;
+*)
+    echo "$USAGE"
+    exit 1
+    ;;
+esac
+
+if [ $? -ne 0 ]
+then
+    echo "error: command failure"
+    exit 1
+fi
+

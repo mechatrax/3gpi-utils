@@ -1,0 +1,7 @@
+debian/files
+debian/*.log
+debian/*.debhelper
+debian/*.substvars
+
+debian/3gpi-utils/*
+

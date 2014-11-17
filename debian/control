@@ -1,0 +1,12 @@
+Source: 3gpi-utils
+Section: unknown
+Priority: optional
+Maintainer: Masahiro Honda <honda@mechatrax.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: http://www.mechatrax.com/
+
+Package: 3gpi-utils
+Architecture: all
+Depends: ${misc:Depends}, systemd
+Description: Utilities for 3GPI

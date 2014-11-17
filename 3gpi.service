@@ -1,0 +1,10 @@
+[Unit]
+Description=Initialize Raspberry Pi GPIO for 3GPI 
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/3gpiinit.sh
+
+[Install]
+WantedBy=multi-user.target
+
