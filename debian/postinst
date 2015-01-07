@@ -1,0 +1,26 @@
+# This will only remove masks created by d-s-h on package removal.
+deb-systemd-helper unmask 3gpi-utils.service >/dev/null || true
+
+# was-enabled defaults to true, so new installations run enable.
+if deb-systemd-helper --quiet was-enabled 3gpi-utils.service; then
+	# Enables the unit on first installation, creates new
+	# symlinks on upgrades if the unit file has changed.
+	deb-systemd-helper enable 3gpi-utils.service >/dev/null || true
+else
+	# Update the statefile to add new symlinks (if any), which need to be
+	# cleaned up on purge. Also remove old symlinks.
+	deb-systemd-helper update-state 3gpi-utils.service >/dev/null || true
+fi
+
+if [ -d /run/systemd/system ]; then
+	systemctl --system daemon-reload >/dev/null || true
+	deb-systemd-invoke start 3gpi-utils.service >/dev/null || true
+fi
+
+if deb-systemd-helper --quiet is-enabled ModemManager.service; then
+	deb-systemd-invoke start ModemManager.service >/dev/null || true
+fi
+
+if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
+	deb-systemd-invoke start NetworkManager.service >/dev/null || true
+fi

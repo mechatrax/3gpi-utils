@@ -2,8 +2,9 @@
 
   * Fix 3gpi-utils.service
   * Modify 3gpictl 
+  * Modify package maintainer scripts
 
- -- Masahiro Honda <honda@mechatrax.com>  Wed, 07 Jan 2015 11:09:10 +0900
+ -- Masahiro Honda <honda@mechatrax.com>  Wed, 07 Jan 2015 12:01:53 +0900
 
 3gpi-utils (0.2-1) unstable; urgency=low
 

@@ -1,0 +1,26 @@
+# In case this system is running systemd, we make systemd reload the unit files
+# to pick up changes.
+if [ -d /run/systemd/system ] ; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+
+if [ "$1" = "remove" ]; then
+	if [ -x "/usr/bin/deb-systemd-helper" ]; then
+		deb-systemd-helper mask 3gpi-utils.service >/dev/null
+	fi
+fi
+
+if [ "$1" = "purge" ]; then
+	if [ -x "/usr/bin/deb-systemd-helper" ]; then
+		deb-systemd-helper purge 3gpi-utils.service >/dev/null
+		deb-systemd-helper unmask 3gpi-utils.service >/dev/null
+	fi
+fi
+
+if deb-systemd-helper --quiet is-enabled ModemManager.service; then
+	deb-systemd-invoke start ModemManager.service >/dev/null || true
+fi
+
+if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
+	deb-systemd-invoke start NetworkManager.service >/dev/null || true
+fi
