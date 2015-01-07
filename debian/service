@@ -3,16 +3,20 @@ Description=Initialize 3GPI
 
 [Service]
 Type=oneshot
+Environment=GPIO_PATH=/sys/class/gpio
 EnvironmentFile=/etc/default/3gpi-utils
-ExecStart=/bin/sh -c 'echo 17 > /sys/class/gpio/export'
-ExecStart=/bin/sh -c 'echo 22 > /sys/class/gpio/export'
-ExecStart=/bin/sh -c 'echo 27 > /sys/class/gpio/export'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio17 ] || echo 17 > ${GPIO_PATH}/export'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio22 ] || echo 22 > ${GPIO_PATH}/export'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio27 ] || echo 27 > ${GPIO_PATH}/export'
 ExecStart=/bin/sleep 1
-ExecStart=/bin/sh -c 'echo "out" > /sys/class/gpio/gpio17/direction'
-ExecStart=/bin/sh -c 'echo "in" > /sys/class/gpio/gpio22/direction'
-ExecStart=/bin/sh -c 'echo "out" > /sys/class/gpio/gpio27/direction'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio17/direction ] && echo "out" > ${GPIO_PATH}/gpio17/direction'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio22/direction ] && echo "in" > ${GPIO_PATH}/gpio22/direction'
+ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio27/direction ] && echo "out" > ${GPIO_PATH}/gpio27/direction'
 ExecStart=/bin/sh -c '[ $AUTO_ON -eq 0 ] || [ $(/usr/sbin/3gpictl --status) = "on" ] || /usr/sbin/3gpictl --poweron'
 ExecStop=/bin/sh -c '[ $(/usr/sbin/3gpictl --status) = "off" ] || /usr/sbin/3gpictl --poweroff'
+ExecStop=/bin/sh -c '[ ! -e ${GPIO_PATH}/gpio17 ] || echo 17 > ${GPIO_PATH}/unexport'
+ExecStop=/bin/sh -c '[ ! -e ${GPIO_PATH}/gpio22 ] || echo 22 > ${GPIO_PATH}/unexport'
+ExecStop=/bin/sh -c '[ ! -e ${GPIO_PATH}/gpio27 ] || echo 27 > ${GPIO_PATH}/unexport'
 RemainAfterExit=yes
 
 [Install]
