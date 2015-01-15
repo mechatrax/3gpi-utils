@@ -38,7 +38,10 @@
     0 : GPSの操作は行いません。  
 
 * /usr/share/doc/3gpi-utils/changelog.Debian.gz  
-  パッケージの変更履歴が記録されているファイルです。  
+  パッケージの変更履歴を記録したファイルです。  
+
+* /usr/share/doc/3gpi-utils/copyright  
+  ソースの著作権とライセンスを記載したファイルです。
 
 * /usr/sbin/3gpictl  
   3GPIの操作を行うための実行ファイルです。  
