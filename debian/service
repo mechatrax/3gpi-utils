@@ -13,6 +13,7 @@ ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio17/direction ] && echo "out" > ${GPI
 ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio22/direction ] && echo "in" > ${GPIO_PATH}/gpio22/direction'
 ExecStart=/bin/sh -c '[ -e ${GPIO_PATH}/gpio27/direction ] && echo "out" > ${GPIO_PATH}/gpio27/direction'
 ExecStart=/bin/sh -c '[ $AUTO_ON -eq 0 ] || [ $(/usr/sbin/3gpictl --status) = "on" ] || /usr/sbin/3gpictl --poweron'
+ExecStart=/bin/sh -c '[ $AUTO_ON -eq 0 ] || [ $AUTO_GPS -eq 0 ] || (/bin/sleep 10; /usr/sbin/3gpictl --gpson)'
 ExecStop=/bin/sh -c '[ $(/usr/sbin/3gpictl --status) = "off" ] || /usr/sbin/3gpictl --poweroff'
 ExecStop=/bin/sh -c '[ ! -e ${GPIO_PATH}/gpio17 ] || echo 17 > ${GPIO_PATH}/unexport'
 ExecStop=/bin/sh -c '[ ! -e ${GPIO_PATH}/gpio22 ] || echo 22 > ${GPIO_PATH}/unexport'
