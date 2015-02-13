@@ -47,14 +47,14 @@
   3GPIの操作を行うための実行ファイルです。  
   使用可能なオプションを以下に示します。  
   
-  –poweron : 電源をオンします。  
-  –poweroff : 電源をオフします。  
-  –reset : 電源をリセットします。  
-  –status : 電源状態を表示します。  
-  –gpson : GPSを有効にします。  
-  –gpsoff : GPSを無効にします。  
-  –version, -v : バージョンを表示します。  
-  –help, -h : ヘルプを表示します。  
+  --poweron : 電源をオンします。  
+  --poweroff : 電源をオフします。  
+  --reset : 電源をリセットします。  
+  --status : 電源状態を表示します。  
+  --gpson : GPSを有効にします。  
+  --gpsoff : GPSを無効にします。  
+  --version, -v : バージョンを表示します。  
+  --help, -h : ヘルプを表示します。  
 
 * /lib/udev/rules.d/70-3gpi-usbserial.rules  
   3GPIのデバイスを定義した設定ファイルです。  
