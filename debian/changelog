@@ -1,3 +1,12 @@
+3gpi-utils (0.4-1) unstable; urgency=medium
+
+  * Update 3gpictl 
+  * Fix 3gpi-utils.service
+  * Fix copyright description
+  * Fix package description
+
+ -- Masahiro Honda <honda@mechatrax.com>  Fri, 04 Dec 2015 01:33:05 +0000
+
 3gpi-utils (0.3-1) unstable; urgency=medium
 
   * Fix 3gpi-utils.service
