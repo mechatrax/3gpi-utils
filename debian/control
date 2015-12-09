@@ -1,12 +1,13 @@
 Source: 3gpi-utils
-Section: unknown
+Section: net
 Priority: optional
 Maintainer: Masahiro Honda <honda@mechatrax.com>
 Build-Depends: debhelper (>= 9), dh-systemd
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://www.mechatrax.com/
 
 Package: 3gpi-utils
 Architecture: all
 Depends: ${misc:Depends}
 Description: Utilities for 3GPI
+ This package contains command utilities to control 3GPI.

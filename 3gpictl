@@ -4,7 +4,7 @@
 # control 3gpi module script
 # 
 
-VERSION="3gpictl version 0.3"
+VERSION="3gpictl version 0.4"
 
 USAGE="Usage: 3gpictl [OPTION]
 
@@ -108,7 +108,10 @@ ctl_gps ()
         return 1
     fi
 
-    echo -e "AT+CGPS=${1}\r" > $CONSOLE
+    stty -F $CONSOLE -icanon min 0 time 10
+    echo -ne "AT+CGPS=${1}\r" > $CONSOLE
+    cat $CONSOLE > /dev/null
+    stty -F $CONSOLE sane
 }
 
 #
