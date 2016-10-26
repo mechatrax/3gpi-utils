@@ -4,7 +4,7 @@
 # control 3gpi module script
 # 
 
-VERSION="3gpictl version 0.4"
+VERSION="3gpictl version 0.5"
 
 USAGE="Usage: 3gpictl [OPTION]
 
@@ -89,6 +89,8 @@ ctl_gpio ()
             echo 1 > $PORT
             sleep $3
             echo 0 > $PORT
+        else
+            sleep 1
         fi
     done
     
