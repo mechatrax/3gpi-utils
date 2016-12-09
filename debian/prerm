@@ -1,3 +1,7 @@
+if [ -d /run/systemd/system ]; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+
 if deb-systemd-helper --quiet is-enabled ModemManager.service; then
 	deb-systemd-invoke stop ModemManager.service >/dev/null || true
 fi
@@ -6,6 +10,8 @@ if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
 	deb-systemd-invoke stop NetworkManager.service >/dev/null || true
 fi
 
-if [ -d /run/systemd/system ]; then
-	deb-systemd-invoke stop 3gpi-utils.service >/dev/null
+if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
+	deb-systemd-invoke stop 3gpi-utils.service >/dev/null || true
 fi
+
+#DEBHELPER#
