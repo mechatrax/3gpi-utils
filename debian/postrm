@@ -6,14 +6,14 @@ fi
 
 if [ "$1" = "remove" ]; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
-		deb-systemd-helper mask 3gpi-utils.service >/dev/null
+		deb-systemd-helper mask 3gpi-utils.service >/dev/null || true
 	fi
 fi
 
 if [ "$1" = "purge" ]; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
-		deb-systemd-helper purge 3gpi-utils.service >/dev/null
-		deb-systemd-helper unmask 3gpi-utils.service >/dev/null
+		deb-systemd-helper purge 3gpi-utils.service >/dev/null || true
+		deb-systemd-helper unmask 3gpi-utils.service >/dev/null || true
 	fi
 fi
 
@@ -24,3 +24,5 @@ fi
 if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
 	deb-systemd-invoke start NetworkManager.service >/dev/null || true
 fi
+
+#DEBHELPER#

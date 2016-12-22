@@ -1,44 +1,57 @@
-#!/bin/sh
-
+#!/bin/bash
 #
-# control 3gpi module script
-# 
+# control 3GPi module
+#
+CONFIG=/etc/default/3gpi-utils
 
-VERSION="3gpictl version 0.5"
+[ -r $CONFIG ] && . $CONFIG
 
-USAGE="Usage: 3gpictl [OPTION]
+VERSION="3gpictl version 1.0"
+
+USAGE="Usage: 3gpictl [ OPTION ]
 
 Options:
-  --poweron        turn on 3g module
-  --poweroff       turn off 3g module
-  --reset          reset 3g module
+  --poweron        turn on module
+  --poweroff       turn off module
+  --reset          reset module
   --status         show power status
-  --gpson          turn on gps module
-  --gpsoff         turn off gps module
+  --gpson          turn on GPS function
+  --gpsoff         turn off GPS function
   --version, -v    display version and exit
   --help, -h       display help and exit
 "
 
-POWER_PIN="17"
-RESET_PIN="27"
-STATUS_PIN="22"
+#
+# Usage: ctl_gps [+CGPS_PARAM]
+#
+ctl_gps ()
+{
+    if [ ! -w $CONSOLE_PORT ]
+    then
+        echo "cannot access ${CONSOLE_PORT}"
+        return 1
+    fi
 
-CONSOLE="/dev/tty3GPI"
+    stty -F $CONSOLE_PORT -icanon min 0 time 10
+    echo -ne "AT+CGPS=${1}\r" > $CONSOLE_PORT
+    cat $CONSOLE_PORT > /dev/null
+    stty -F $CONSOLE_PORT sane
+}
 
 #
 # Usage: stat_gpio [GPIO_PIN]
 #
 stat_gpio ()
 {
-    PORT="/sys/class/gpio/gpio${1}/value"
+    GPIO_PORT="/sys/class/gpio/gpio${1}/value"
 
-    if [ ! -r $PORT ]
+    if [ ! -r $GPIO_PORT ]
     then
-        echo "cannot access ${PORT}"
+        echo "cannot access $GPIO_PORT"
         return 1
     fi
 
-    case "$(cat $PORT)" in
+    case "$(cat $GPIO_PORT)" in
     0)
         echo "off"
         ;;
@@ -57,63 +70,46 @@ stat_gpio ()
 #
 ctl_gpio ()
 {
-    PORT="/sys/class/gpio/gpio${2}/value"
+    GPIO_PORT="/sys/class/gpio/gpio${2}/value"
 
     for i in `seq 0 $4`
-    do 
+    do
         STATUS=$(stat_gpio $STATUS_PIN)
-        
+
         if [ $? -ne 0 ]
         then
             echo $STATUS
             return 1
         fi
-        
+
         if [ $STATUS = $1 ]
         then
             if [ $i -eq 0 ]
             then
-                echo "already power ${1}"
+                echo "already power $1"
             fi
             return 0
         fi
-        
-        if [ ! -w $PORT ]
+
+        if [ ! -w $GPIO_PORT ]
         then
-            echo "cannot access ${PORT}"
+            echo "cannot access $GPIO_PORT"
             return 1
         fi
 
         if [ $i -eq 0 ]
-        then        
-            echo 1 > $PORT
+        then
+            echo 1 > $GPIO_PORT
             sleep $3
-            echo 0 > $PORT
+            echo 0 > $GPIO_PORT
         else
             sleep 1
         fi
     done
-    
+
     echo "timeout power ${1}"
-    
+
     return 1
-}
-
-#
-# Usage: ctl_gps [+CGPS_PARAM]
-#
-ctl_gps ()
-{
-    if [ ! -w $CONSOLE ]
-    then
-        echo "cannot access ${CONSOLE}"
-        return 1
-    fi
-
-    stty -F $CONSOLE -icanon min 0 time 10
-    echo -ne "AT+CGPS=${1}\r" > $CONSOLE
-    cat $CONSOLE > /dev/null
-    stty -F $CONSOLE sane
 }
 
 #
@@ -121,16 +117,16 @@ ctl_gps ()
 #
 case $1 in
 --poweron)
-    ctl_gpio "on" $POWER_PIN 3 30
+    ctl_gpio "on" "$POWER_PIN" "3" "$TIMEOUT"
     ;;
 --poweroff)
-    ctl_gpio "off" $POWER_PIN 3 30
+    ctl_gpio "off" "$POWER_PIN" "3" "$TIMEOUT"
     ;;
 --reset)
-    ctl_gpio "off" $RESET_PIN 1 30
+    ctl_gpio "off" "$RESET_PIN" "1" "$TIMEOUT"
     ;;
 --status)
-    stat_gpio $STATUS_PIN
+    stat_gpio "$STATUS_PIN"
     ;;
 --gpson)
     ctl_gps "1,1"
@@ -153,6 +149,6 @@ esac
 if [ $? -ne 0 ]
 then
     echo "error: command failure"
-    exit 1
+    exit 2
 fi
 

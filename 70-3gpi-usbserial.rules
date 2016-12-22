@@ -1,22 +1,24 @@
-# 3GPI SIM5320 usbserial port
+# 3GPi usb serial port
 
 ACTION!="add|change|move", GOTO="3gpi_usbserial_end"
-SUBSYSTEM=="tty", ATTRS{idVendor}=="05c6", ATTRS{idProduct}=="9000", GOTO="3gpi_usbserial_go"
+SUBSYSTEM!="tty", GOTO="3gpi_usbserial_end"
+
+SUBSYSTEMS=="usb", KERNEL=="ttyUSB*", ATTRS{idVendor}=="05c6", ATTRS{idProduct}=="9000", GOTO="3gpi_usbserial_go"
 GOTO="3gpi_usbserial_end"
 
 LABEL="3gpi_usbserial_go"
 
 # DIAG port
-KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="00"
+ENV{ID_USB_INTERFACE_NUM}=="00"
 
 # NMEA port
-KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="gps"
+ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="gps"
 
 # AT command port
-KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI"
+ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI"
 
 # MODEM port
-KERNEL=="ttyUSB*", ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="modem"
+ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="modem"
 
 LABEL="3gpi_usbserial_end"
 
