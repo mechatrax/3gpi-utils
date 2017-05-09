@@ -1,3 +1,9 @@
+3gpi-utils (1.0.1) unstable; urgency=medium
+
+  * Fix configuration description
+
+ -- Masahiro Honda <honda@mechatrax.com>  Mon, 08 May 2017 15:29:09 +0900
+
 
 3gpi-utils (1.0.0) unstable; urgency=medium
 
