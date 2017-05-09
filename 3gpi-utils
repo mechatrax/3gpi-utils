@@ -9,7 +9,7 @@ CONSOLE_PORT=/dev/tty3GPI
 #  RI_PIN: 16 or 18
 #  POWER_PIN: 17(default) or 12
 #  STATUS_PIN: 22(default) or 13
-#  RESET_PIN: 27(default) or 16
+#  RESET_PIN: 27(default) or 6
 #  Disabled if not set
 RI_PIN=
 POWER_PIN=17
