@@ -21,8 +21,4 @@ if deb-systemd-helper --quiet is-enabled ModemManager.service; then
 	deb-systemd-invoke restart ModemManager.service >/dev/null || true
 fi
 
-if deb-systemd-helper --quiet is-enabled NetworkManager.service; then
-	deb-systemd-invoke restart NetworkManager.service >/dev/null || true
-fi
-
 #DEBHELPER#
