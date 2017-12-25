@@ -1,0 +1,47 @@
+_3gpictl()
+{
+	local cmds=(
+		'--poweron'
+		'--poweroff'
+		'--reset'
+		'--status'
+		'--riclear'
+		'--rienable'
+		'--gpson'
+		'--gpsoff'
+	)
+	local opts=(
+		'--timeout'
+	)
+	local exts=(
+		'--version'
+		'--help'
+	)
+	local cur prev words cword
+	_init_completion || return
+
+	if [ $cword -eq 1 ]
+	then
+		COMPREPLY=( $(compgen -W '${opts[@]} ${cmds[@]} ${exts[@]}' -- $cur) )
+		return
+	elif [ $cword -gt 3 ]
+	then
+		return
+	fi
+	
+	case $prev in
+	-t|--timeout)
+		;;
+	-h|--help|-v|--version)
+		;;
+	-*)
+		COMPREPLY=( $(compgen -W '${opts[@]}' -- $cur) )
+		;;
+	*)
+		COMPREPLY=( $(compgen -W '${cmds[@]}' -- $cur) )
+		;;
+	esac
+} &&
+
+complete -F _3gpictl 3gpictl
+

@@ -1,3 +1,14 @@
+3gpi-utils (2.0.0) unstable; urgency=low
+
+  * debian/*: Change to provide multiple binary packages
+  * Add modem-init.sh
+  * Add 3gpi-utils-modem-init.service
+  * Add chatscripts
+  * Add bash_completion for 3gpictl
+  * Update package maintainer scripts
+
+ -- Masahiro Honda <honda@mechatrax.com>  Fri, 15 Dec 2017 17:43:02 +0900
+
 3gpi-utils (1.0.3) unstable; urgency=low
 
   * debian/changelog: Fix typo

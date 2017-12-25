@@ -15,7 +15,7 @@ ENV{ID_USB_INTERFACE_NUM}=="00"
 ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="gps"
 
 # AT command port
-ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI"
+ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty3GPI", TAG+="systemd", ENV{SYSTEMD_WANTS}+="3gpi-modem-init.service"
 
 # MODEM port
 ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="modem"

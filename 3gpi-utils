@@ -16,10 +16,6 @@ POWER_PIN=17
 STATUS_PIN=22
 RESET_PIN=27
 
-# Timeout
-#  TIMEOUT=10: power status detection timeout in seconds
-TIMEOUT=10
-
 # Power on 3GPi at boot 
 #  AUTO_ON=0: disable auto power on
 #  AUTO_ON=1: enable auto power on
@@ -39,4 +35,14 @@ AUTO_RESET=0
 #  AUTO_GPS=0: disable auto gps start
 #  AUTO_GPS=1: enable auto gps start (AUTO_ON=1 is required)
 AUTO_GPS=0
+
+# Enable the modem to wake up on ring during standby
+#  WAKE_ON_RING=0: disable Wake-on-Ring
+#  WAKE_ON_RING=1: enable Wake-on-Ring (AUTO_OFF=0 is required)
+WAKE_ON_RING=0
+
+# Store SMS at Wake-on-Ring (WAKE_ON_RING=1 is required)
+#  STORE_SMS_ON_RING=0: do not store the sms
+#  STORE_SMS_ON_RING=1: store the sms
+STORE_SMS_ON_RING=0
 

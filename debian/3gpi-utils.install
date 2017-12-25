@@ -1,0 +1,12 @@
+./3gpictl /usr/sbin/
+./gpio-export.sh /usr/lib/3gpi-utils/
+./gpio-unexport.sh /usr/lib/3gpi-utils/
+./modem-init.sh /usr/lib/3gpi-utils/
+./start.sh /usr/lib/3gpi-utils/
+./stop.sh /usr/lib/3gpi-utils/
+./chatscripts /usr/lib/3gpi-utils/
+./3gpi-utils.service /lib/systemd/system/
+./3gpi-modem-init.service /lib/systemd/system/
+./70-3gpi-usbserial.rules /lib/udev/rules.d/
+./3gpi.conf /etc/modules-load.d/
+./3gpi-utils /etc/default/
