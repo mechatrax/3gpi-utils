@@ -1,3 +1,9 @@
+3gpi-utils (2.0.1) unstable; urgency=medium
+
+  * Fix dependencies
+
+ -- Masahiro Honda <honda@mechatrax.com>  Mon, 25 Dec 2017 17:57:46 +0900
+
 3gpi-utils (2.0.0) unstable; urgency=low
 
   * debian/*: Change to provide multiple binary packages
