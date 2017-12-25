@@ -18,6 +18,6 @@ Package: 3gpi-utils
 Architecture: all
 Replaces: 3gpi-utils-1.0 (<< 2.0.0)
 Breaks: 3gpi-utils-1.0 (<< 2.0.0)
-Depends: ${misc:Depends}, pppconfig
+Depends: ${misc:Depends}, ppp
 Description: Utilities for 3GPi family
  This package contains command line utilities to control 3GPi family.
