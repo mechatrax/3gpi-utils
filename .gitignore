@@ -4,5 +4,6 @@ debian/*.log
 debian/*.debhelper
 debian/*.substvars
 
+debian/3gpi-utils/*
 debian/3gpi-utils-1.0/*
 

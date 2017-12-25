@@ -7,6 +7,7 @@ fi
 if [ "$1" = "remove" ]; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
 		deb-systemd-helper mask 3gpi-utils.service >/dev/null || true
+		deb-systemd-helper mask 3gpi-utils-modem-init.service >/dev/null || true
 	fi
 fi
 
@@ -14,10 +15,12 @@ if [ "$1" = "purge" ]; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
 		deb-systemd-helper purge 3gpi-utils.service >/dev/null || true
 		deb-systemd-helper unmask 3gpi-utils.service >/dev/null || true
+		deb-systemd-helper unmask 3gpi-utils-modem-init.service >/dev/null || true
 	fi
 fi
 
-if deb-systemd-helper --quiet is-enabled ModemManager.service; then
+if deb-systemd-helper --quiet debian-installed ModemManager.service \
+    && deb-systemd-helper --quiet is-enabled ModemManager.service; then
 	deb-systemd-invoke start ModemManager.service >/dev/null || true
 fi
 

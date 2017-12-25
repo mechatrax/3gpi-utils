@@ -1,9 +1,0 @@
-./3gpictl /usr/sbin/
-./export.sh /usr/lib/3gpi-utils/
-./stop.sh /usr/lib/3gpi-utils/
-./start.sh /usr/lib/3gpi-utils/
-./unexport.sh /usr/lib/3gpi-utils/
-./3gpi-utils.service /lib/systemd/system/
-./70-3gpi-usbserial.rules /lib/udev/rules.d/
-./3gpi.conf /etc/modules-load.d/
-./3gpi-utils /etc/default/

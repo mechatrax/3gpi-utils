@@ -3,8 +3,15 @@
 if [ "$AUTO_OFF" != "0" ]
 then
   3gpictl --poweroff
-elif [ "$AUTO_RESET" != "0" ]
-then
-  3gpictl --reset
+else
+  if [ "$WAKE_ON_RING" != "0" ]
+  then
+    3gpictl --rienable
+    3gpictl --riclear
+  fi
+  if [ "$AUTO_RESET" != "0" ]
+  then
+    3gpictl --reset
+  fi
 fi
 

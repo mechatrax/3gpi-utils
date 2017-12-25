@@ -2,40 +2,53 @@
 #
 # control 3GPi module
 #
+TIMEOUT=10
 CONFIG=/etc/default/3gpi-utils
 
 [ -r $CONFIG ] && . $CONFIG
 
-VERSION="3gpictl version 1.0"
+VERSION="3gpictl version 2.0"
 
-USAGE="Usage: 3gpictl [ OPTION ]
+USAGE="Usage: 3gpictl [ OPTION ] COMMAND
 
 Options:
-  --poweron        turn on module
-  --poweroff       turn off module
-  --reset          reset module
-  --status         show power status
-  --gpson          turn on GPS function
-  --gpsoff         turn off GPS function
-  --version, -v    display version and exit
-  --help, -h       display help and exit
+  --timeout, -t [N]  set timeout to N sec (default=10)
+
+Commands:
+  --poweron          turn on module
+  --poweroff         turn off module
+  --reset            reset module
+  --status           show power status
+  --gpson            turn on GPS function
+  --gpsoff           turn off GPS function
+  --riclear          clear RI
+  --rienable         enable RI
+  --version, -v      display version and exit
+  --help, -h         display help and exit
 "
 
+SCRIPT_PATH=/usr/lib/3gpi-utils/chatscripts
+
 #
-# Usage: ctl_gps [+CGPS_PARAM]
+# Usage: chat_console [FILE] [TIMEOUT]
 #
-ctl_gps ()
+chat_console ()
 {
+    local script=${SCRIPT_PATH}/${1}
+    
     if [ ! -w $CONSOLE_PORT ]
     then
         echo "cannot access ${CONSOLE_PORT}"
         return 1
     fi
-
-    stty -F $CONSOLE_PORT -icanon min 0 time 10
-    echo -ne "AT+CGPS=${1}\r" > $CONSOLE_PORT
-    cat $CONSOLE_PORT > /dev/null
-    stty -F $CONSOLE_PORT sane
+    
+    if [ ! -r $script ]
+    then
+        echo "cannot read ${script}"
+        return 1
+    fi
+    
+    chat -t $2 -f $script < $CONSOLE_PORT > $CONSOLE_PORT
 }
 
 #
@@ -43,15 +56,15 @@ ctl_gps ()
 #
 stat_gpio ()
 {
-    GPIO_PORT="/sys/class/gpio/gpio${1}/value"
+    local port=/sys/class/gpio/gpio${1}/value
 
-    if [ ! -r $GPIO_PORT ]
+    if [ ! -r $port ]
     then
-        echo "cannot access $GPIO_PORT"
+        echo "cannot access $port"
         return 1
     fi
 
-    case "$(cat $GPIO_PORT)" in
+    case "$(cat $port)" in
     0)
         echo "off"
         ;;
@@ -70,7 +83,7 @@ stat_gpio ()
 #
 ctl_gpio ()
 {
-    GPIO_PORT="/sys/class/gpio/gpio${2}/value"
+    local i port="/sys/class/gpio/gpio${2}/value"
 
     for i in `seq 0 $4`
     do
@@ -78,7 +91,7 @@ ctl_gpio ()
 
         if [ $? -ne 0 ]
         then
-            echo $STATUS
+            echo "$STATUS"
             return 1
         fi
 
@@ -91,20 +104,19 @@ ctl_gpio ()
             return 0
         fi
 
-        if [ ! -w $GPIO_PORT ]
+        if [ ! -w $port ]
         then
-            echo "cannot access $GPIO_PORT"
+            echo "cannot access $port"
             return 1
         fi
 
         if [ $i -eq 0 ]
         then
-            echo 1 > $GPIO_PORT
+            echo 1 > $port
             sleep $3
-            echo 0 > $GPIO_PORT
-        else
-            sleep 1
+            echo 0 > $port
         fi
+        sleep 1
     done
 
     echo "timeout power ${1}"
@@ -112,27 +124,57 @@ ctl_gpio ()
     return 1
 }
 
+
+ARGS=($@)
+#
+# check options
+#
+for i in $(seq 0 $((${#ARGS[@]} - 1)))
+do
+  case ${ARGS[$i]} in
+    -t|--timeout)
+      TIMEOUT=${ARGS[$(($i + 1))]}
+      unset ARGS[$i]
+      unset ARGS[$(($i + 1))]
+      ;;
+    *)
+      ;;
+  esac
+done
+
+ARGS=(${ARGS[@]})
 #
 # execute command
 #
-case $1 in
+case ${ARGS[0]} in
 --poweron)
-    ctl_gpio "on" "$POWER_PIN" "3" "$TIMEOUT"
+    ctl_gpio on $POWER_PIN 3 $TIMEOUT
     ;;
 --poweroff)
-    ctl_gpio "off" "$POWER_PIN" "3" "$TIMEOUT"
+    ctl_gpio off $POWER_PIN 3 $TIMEOUT
     ;;
 --reset)
-    ctl_gpio "off" "$RESET_PIN" "1" "$TIMEOUT"
+    ctl_gpio off $RESET_PIN 1 $TIMEOUT
     ;;
 --status)
-    stat_gpio "$STATUS_PIN"
+    stat_gpio $STATUS_PIN
+    ;;
+--riclear)
+    chat_console ri-clear $TIMEOUT
+    ;;
+--rienable)
+    if [ "$STORE_SMS_ON_RING" != "0" ]
+    then
+      chat_console ri-enable-me $TIMEOUT
+    else
+      chat_console ri-enable-sm $TIMEOUT
+    fi
     ;;
 --gpson)
-    ctl_gps "1,1"
+    chat_console gps-on $TIMEOUT
     ;;
 --gpsoff)
-    ctl_gps "0"
+    chat_console gps-off $TIMEOUT
     ;;
 -v|--version)
     echo "$VERSION"

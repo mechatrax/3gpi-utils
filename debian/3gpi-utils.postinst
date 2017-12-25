@@ -1,5 +1,6 @@
 # This will only remove masks created by d-s-h on package removal.
 deb-systemd-helper unmask 3gpi-utils.service >/dev/null || true
+deb-systemd-helper unmask 3gpi-utils-modem-init.service >/dev/null || true
 
 # was-enabled defaults to true, so new installations run enable.
 if deb-systemd-helper --quiet was-enabled 3gpi-utils.service; then
@@ -17,7 +18,8 @@ if [ -d /run/systemd/system ]; then
 	deb-systemd-invoke start 3gpi-utils.service >/dev/null || true
 fi
 
-if deb-systemd-helper --quiet is-enabled ModemManager.service; then
+if deb-systemd-helper --quiet debian-installed ModemManager.service \
+    && deb-systemd-helper --quiet is-enabled ModemManager.service; then
 	deb-systemd-invoke restart ModemManager.service >/dev/null || true
 fi
 
