@@ -2,8 +2,8 @@ Source: 3gpi-utils
 Section: net
 Priority: optional
 Maintainer: Masahiro Honda <honda@mechatrax.com>
-Build-Depends: debhelper (>= 9), dh-systemd, bash-completion
-Standards-Version: 3.9.8
+Build-Depends: debhelper (>= 12), bash-completion
+Standards-Version: 4.3.0
 Vcs-Git: https://github.com/mechatrax/3gpi-utils.git
 Vcs-browser: https://github.com/mechatrax/3gpi-utils
 Homepage: https://www.mechatrax.com/

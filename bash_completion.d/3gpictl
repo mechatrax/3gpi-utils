@@ -24,18 +24,10 @@ _3gpictl()
 	then
 		COMPREPLY=( $(compgen -W '${opts[@]} ${cmds[@]} ${exts[@]}' -- $cur) )
 		return
-	elif [ $cword -gt 3 ]
-	then
-		return
 	fi
-	
+
 	case $prev in
-	-t|--timeout)
-		;;
-	-h|--help|-v|--version)
-		;;
 	-*)
-		COMPREPLY=( $(compgen -W '${opts[@]}' -- $cur) )
 		;;
 	*)
 		COMPREPLY=( $(compgen -W '${cmds[@]}' -- $cur) )
